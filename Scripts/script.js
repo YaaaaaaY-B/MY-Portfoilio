@@ -1,97 +1,101 @@
-const {
-  gsap: { registerPlugin, set, to, timeline },
-  MorphSVGPlugin,
-  Draggable } =
-window;
-registerPlugin(MorphSVGPlugin);
+document.addEventListener('DOMContentLoaded', () => {
+    // Select the mobile menu toggle button and navigation links
+    const menuToggle = document.querySelector('.menu-toggle');
+    const navLinks = document.querySelector('.nav-links');
+    const openModal = document.querySelector('.open-modal');
+    const modal = document.getElementById('myModal');
+    const closeModal = document.querySelector('.close-button');
 
-// Used to calculate distance of "tug"
-let startX;
-let startY;
+    // Toggle the 'active' class on the nav-links to open/close the menu
+    menuToggle.addEventListener('click', () => {
+        navLinks.classList.toggle('active');
+    });
 
-const AUDIO = {
-  CLICK: new Audio('https://assets.codepen.io/605876/click.mp3') };
+    // Optional: Close the menu when clicking outside of it
+    window.addEventListener('click', (event) => {
+        if (!navLinks.contains(event.target) && !menuToggle.contains(event.target)) {
+            navLinks.classList.remove('active');
+        }
+    });
 
-const STATE = {
-  ON: false };
+    // Modal functionality for project details
+    if (openModal) {
+        openModal.addEventListener('click', () => {
+            modal.style.display = 'flex';
+        });
+    }
 
-const CORD_DURATION = 0.1;
+    closeModal.addEventListener('click', () => {
+        modal.style.display = 'none';
+    });
 
-const CORDS = document.querySelectorAll('.toggle-scene__cord');
-const HIT = document.querySelector('.toggle-scene__hit-spot');
-const DUMMY = document.querySelector('.toggle-scene__dummy-cord');
-const DUMMY_CORD = document.querySelector('.toggle-scene__dummy-cord line');
-const PROXY = document.createElement('div');
-// set init position
-const ENDX = DUMMY_CORD.getAttribute('x2');
-const ENDY = DUMMY_CORD.getAttribute('y2');
-const RESET = () => {
-  set(PROXY, {
-    x: ENDX,
-    y: ENDY });
-
-};
-
-RESET();
-
-const CORD_TL = timeline({
-  paused: true,
-  onStart: () => {
-    STATE.ON = !STATE.ON;
-    set(document.documentElement, { '--on': STATE.ON ? 1 : 0 });
-    set([DUMMY, HIT], { display: 'none' });
-    set(CORDS[0], { display: 'block' });
-    AUDIO.CLICK.play();
-    
-    // Add a delay of 1 second before navigating to another page
-    setTimeout(() => {
-      window.location.href = 'main.html'; // Change 'newpage.html' to your desired URL
-    }, 1000); // 1000 milliseconds = 1 second
-  },
-  onComplete: () => {
-    set([DUMMY, HIT], { display: 'block' });
-    set(CORDS[0], { display: 'none' });
-    RESET();
-  }
+    window.addEventListener('click', (event) => {
+        if (event.target === modal) {
+            modal.style.display = 'none';
+        }
+    });
 });
 
-for (let i = 1; i < CORDS.length; i++) {
-  CORD_TL.add(
-  to(CORDS[0], {
-    morphSVG: CORDS[i],
-    duration: CORD_DURATION,
-    repeat: 1,
-    yoyo: true }));
+window.addEventListener('load', () => {
+    const loader = document.querySelector('.loader');
+    const loadingText = document.querySelector('.loading-text');
+    const messages = ["Loading skills...", "Fetching projects...", "Setting up interface..."];
+    let messageIndex = 0;
 
-}
+    // Change the text every 2 seconds
+    const messageInterval = setInterval(() => {
+        loadingText.textContent = messages[messageIndex];
+        messageIndex = (messageIndex + 1) % messages.length; // Loop through the messages array
+    }, 2000);
 
-Draggable.create(PROXY, {
-  trigger: HIT,
-  type: 'x,y',
-  onPress: e => {
-    startX = e.x;
-    startY = e.y;
-  },
-  onDrag: function () {
-    set(DUMMY_CORD, {
-      attr: {
-        x2: this.x,
-        y2: this.y } });
-  },
-  onRelease: function (e) {
-    const DISTX = Math.abs(e.x - startX);
-    const DISTY = Math.abs(e.y - startY);
-    const TRAVELLED = Math.sqrt(DISTX * DISTX + DISTY * DISTY);
-    to(DUMMY_CORD, {
-      attr: { x2: ENDX, y2: ENDY },
-      duration: CORD_DURATION,
-      onComplete: () => {
-        if (TRAVELLED > 50) {
-          CORD_TL.restart();
-        } else {
-          RESET();
-        }
-      }
+    // Delay hiding the loader by 3 seconds after the page load
+    setTimeout(() => {
+        loader.style.display = 'none';
+        clearInterval(messageInterval); // Stop cycling through messages once the loader is hidden
+    }, 6000);
+
+    // Create the custom cursor dot element
+    const cursor = document.createElement('div');
+    cursor.classList.add('custom-cursor');
+    document.body.appendChild(cursor);
+
+    let mouseX = 0;
+    let mouseY = 0;
+    let targetX = 0;
+    let targetY = 0;
+    let isHovered = false;
+
+    // Update target positions based on mouse movement
+    document.addEventListener('mousemove', (e) => {
+        targetX = e.clientX;
+        targetY = e.clientY;
     });
-  }
+
+    // Smooth cursor movement using requestAnimationFrame
+    function updateCursor() {
+        // Calculate smooth movement
+        mouseX += (targetX - mouseX) * 0.2; // Control the speed (0.1 for smoothness)
+        mouseY += (targetY - mouseY) * 0.2;
+
+        cursor.style.left = `${mouseX}px`;
+        cursor.style.top = `${mouseY}px`;
+
+        // Request the next frame
+        requestAnimationFrame(updateCursor);
+    }
+
+    // Start smooth movement
+    updateCursor();
+
+    // Make the cursor larger on hover over clickable elements and add a border
+    document.querySelectorAll('a, button, .menu-toggle').forEach(element => {
+        element.addEventListener('mouseenter', () => {
+            cursor.classList.add('enlarged');
+            cursor.classList.add('hovered');
+        });
+        element.addEventListener('mouseleave', () => {
+            cursor.classList.remove('enlarged');
+            cursor.classList.remove('hovered');
+        });
+    });
 });
