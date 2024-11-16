@@ -99,3 +99,24 @@ window.addEventListener('load', () => {
         });
     });
 });
+document.querySelector('.contact-form').addEventListener('submit', function (e) {
+    e.preventDefault();
+
+    const form = e.target;
+    const formData = new FormData(form);
+
+    // Send form data to Google Sheets
+    fetch(form.action, {
+        method: 'POST',
+        body: formData
+    })
+        .then(response => {
+            if (response.ok) {
+                alert('Your message has been sent! Thank you for reaching out.');
+                form.reset(); // Clear the form
+            } else {
+                alert('There was an error submitting your message. Please try again.');
+            }
+        })
+        .catch(() => alert('Network error. Please check your connection.'));
+});
