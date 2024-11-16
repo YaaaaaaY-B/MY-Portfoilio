@@ -242,6 +242,76 @@ section h2 {
     font-size: 1.5rem;
 }
 
+
+/* Wrapper to position overlay links */
+.iframe-wrapper {
+    position: relative;
+    width: 100%;
+    height: 100%; /* Ensure it fills the container */
+    overflow: hidden;
+    display: flex; /* Ensure content aligns properly */
+    align-items: center;
+    justify-content: center;
+}
+
+/* Ensure iframe or images occupy the full wrapper */
+.iframe-wrapper iframe,
+.iframe-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Ensure no cropping */
+    display: block;
+}
+
+/* Overlay Link Styles */
+.overlay-link {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black overlay */
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-decoration: none;
+    font-size: 1.2rem;
+    font-weight: bold;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: 2; /* Ensure overlay is on top */
+}
+
+/* Show overlay on hover */
+.iframe-wrapper:hover .overlay-link {
+    opacity: 1;
+}
+
+/* Prevent clipping: Ensure iframe/image remains visible */
+.iframe-wrapper:hover iframe,
+.iframe-wrapper:hover img {
+    filter: brightness(0.7); /* Optional: Dim background */
+    transform: scale(1.02); /* Slight zoom for effect */
+    transition: transform 0.3s ease;
+}
+
+/* Adjust project items for consistent scaling */
+.project-item {
+    position: relative;
+    width: 100%;
+    height: 525px; /* Fixed height for consistency */
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    border-radius: 8px; /* Optional: Rounded corners */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Optional: Shadow effect */
+}
+
+
+
+
 /* Responsive Adjustments */
 @media (max-width: 600px) {
     /* Project Grid: Single Column for Small Screens */
@@ -673,4 +743,114 @@ section h2 {
     overflow: hidden;
     border-right: 2px solid #1e90ff;
     padding-right: 5px;
+}
+
+
+
+
+/* Contact Section */
+.contact {
+    padding: 4rem 2rem;
+    background: #222; /* Dark background to match theme */
+    color: #f0f0f0;
+    text-align: center;
+    border-top: 2px solid #1e90ff; /* Accent border */
+}
+
+.contact h2 {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    color: #1e90ff; /* Highlighted text */
+}
+
+.contact p {
+    font-size: 1rem;
+    margin-bottom: 2rem;
+    color: #ccc;
+}
+
+.contact-details {
+    font-size: 1rem;
+    line-height: 2rem;
+}
+
+.contact-details a {
+    color: #1e90ff;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.contact-details a:hover {
+    color: #0056b3; /* Darker blue on hover */
+}
+/* Contact Section */
+.contact {
+    padding: 4rem 2rem;
+    background: #222; /* Dark background to match theme */
+    color: #f0f0f0;
+    text-align: center;
+    border-top: 2px solid #1e90ff; /* Accent border */
+}
+
+.contact h2 {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    color: #1e90ff; /* Highlighted text */
+}
+
+.contact p {
+    font-size: 1rem;
+    margin-bottom: 2rem;
+    color: #ccc;
+}
+
+.contact-form {
+    max-width: 600px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group input,
+.form-group textarea {
+    width: 100%;
+    padding: 1rem;
+    font-size: 1rem;
+    color: #f0f0f0;
+    background: #333;
+    border: 1px solid #555;
+    border-radius: 5px;
+    transition: border-color 0.3s ease;
+}
+
+.form-group input::placeholder,
+.form-group textarea::placeholder {
+    color: #aaa;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+    border-color: #1e90ff; /* Highlight on focus */
+    outline: none;
+}
+
+.submit-button {
+    background: #1e90ff;
+    color: #f0f0f0;
+    border: none;
+    padding: 0.8rem 1.5rem;
+    font-size: 1rem;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.submit-button:hover {
+    background: #0056b3; /* Darker shade on hover */
 }
